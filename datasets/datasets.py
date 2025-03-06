@@ -77,16 +77,16 @@ class VideoRecord(object):
 
 class SurgVisDom(data.Dataset):
     def __init__(self, 
-                 list_file, 
+                 list_file, # /home/heyuxin/anaconda3/envs/pytorch/SDA-CLIP-main/lists/surgvisdom/test_frames.txt
                  labels_file,
                  num_segments=1, 
                  new_length=1,
                  image_tmpl='img_{:05d}.jpg', 
-                 transform=None,
+                 transform=None, # 验证时为transform_val
                  random_shift=True, 
                  test_mode=False, 
                  index_bias=0, 
-                 kfold=False):
+                 kfold=False): # kfold没有做修改，取默认值False
 
         self.list_file = list_file
         self.num_segments = num_segments
@@ -135,7 +135,8 @@ class SurgVisDom(data.Dataset):
     def _parse_list(self):
         # path, num_frames, label
         if not self.kfold:
-            self.video_list = [VideoRecord(x.strip().split(' '))
+            # kfold取False时
+            self.video_list = [VideoRecord(x.strip().split(' ')) # 以' '分隔，获取前面的部分，即视频帧的路径
                                for x in open(self.list_file)]
         else:
             self.video_list = [VideoRecord(x)

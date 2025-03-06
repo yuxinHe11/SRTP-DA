@@ -50,12 +50,10 @@ with open(args.config, 'r') as f:
 
     config = DotMap(config)
 
-transform_train = get_augmentation(True, config)
+transform_val = get_augmentation(False, config)
 
-train_data = SurgVisDom(config.data.train_list, config.data.label_list,  # Todo train_list
-                                 num_segments=config.data.num_segments, image_tmpl=config.data.image_tmpl,
-                                 random_shift=config.data.random_shift, transform=transform_train)
-
-a,b,c = text_prompt(train_data)
-
-print(a)
+val_data = SurgVisDom(config.data.test_list, config.data.label_list, num_segments=config.data.num_segments,
+                          image_tmpl=config.data.image_tmpl,
+                          transform=transform_val, random_shift=config.random_shift, test_mode= True)
+val_loader = DataLoader(val_data, batch_size=config.data.batch_size, num_workers=1, shuffle=False,
+                            pin_memory=True, drop_last=True)
